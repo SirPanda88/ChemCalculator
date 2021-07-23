@@ -124,6 +124,7 @@ public enum Element {
 
     private static class Holder {
         static Map<Integer, Element> numberElementMap = new HashMap<Integer, Element>();
+        static Map<String, Element> symbolElementMap = new HashMap<String, Element>();
     }
     // numerical fields
     private final int atomicNumber;
@@ -155,10 +156,22 @@ public enum Element {
         this.type = type;
         this.electronConfiguration = electronConfiguration;
         Holder.numberElementMap.put(this.atomicNumber, this);
+        Holder.symbolElementMap.put(this.symbol, this);
     }
 
     public static Element forAtomicNumber(int atomicNumber) {
+        if (atomicNumber < 1 || atomicNumber > 118) {
+            throw new IllegalArgumentException("Invalid atomic number");
+        }
         return Holder.numberElementMap.get(atomicNumber);
+    }
+    public static Element forAtomicSymbol(String atomicSymbol) {
+        if (atomicSymbol == null) {
+            throw new IllegalArgumentException("Null symbol");
+        } else if (!Holder.symbolElementMap.containsKey(atomicSymbol)) {
+            throw new IllegalArgumentException("Invalid Symbol");
+        }
+        return Holder.symbolElementMap.get(atomicSymbol);
     }
 
     public int getAtomicNumber() {
