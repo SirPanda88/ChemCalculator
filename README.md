@@ -3,4 +3,8 @@ Calculators for AP and college intro chemistry courses
 
 ## Features
 
-Molar mass calculator in progress, more coming soon
+Molar mass calculator complete, more coming soon
+
+Added support for nested parentheses
+
+Added support for waters of hydration
