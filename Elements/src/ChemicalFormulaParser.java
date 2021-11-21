@@ -1,5 +1,6 @@
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Stack;
 import java.util.regex.*;
 
 public class ChemicalFormulaParser {
@@ -105,6 +106,55 @@ public class ChemicalFormulaParser {
                     mergeElementIntegerMaps(result, restOfFormulaMap);
                 }
                 return result;
+            }
+        }
+        return result;
+    }
+
+    public static Map<Element, Integer> parseWithParenthesesIterative(String formula) {
+
+        Map<Element, Integer> result = new HashMap<Element, Integer>();
+
+        // parameter validation
+        if (formula == null) {
+            throw new IllegalArgumentException("Null formula");
+        }
+
+        if (formula.length() == 0) {
+            return result;
+        }
+
+        if (Character.isDigit(formula.charAt(0))) {
+            throw new IllegalArgumentException("Formula cannot begin with number");
+        }
+
+        // parsing logic
+        StringBuilder noParenthesesString = new StringBuilder("");
+        Stack recursiveStack = new Stack<Map<Element, Integer>>();
+
+        for (int i = 0; i < formula.length(); i++) {
+            char c = formula.charAt(i);
+
+            if (Character.isLetterOrDigit(c)) {
+                noParenthesesString.append(c);
+
+                if (i == formula.length() - 1) {
+                    // end of formula
+
+                    Map<Element, Integer> noParenthesesMap = parseNoParenthesesFormula(noParenthesesString.toString());
+                    mergeElementIntegerMaps(result, noParenthesesMap);
+                    return result;
+                }
+
+            } else if (c == '(') {
+                Map<Element, Integer> noParenthesesMap = parseNoParenthesesFormula(noParenthesesString.toString());
+                recursiveStack.push(noParenthesesMap);
+
+                noParenthesesString = new StringBuilder("");
+
+                if (Character.isDigit(formula.charAt(i + 1))) {
+                    throw new IllegalArgumentException("Formula cannot begin with number");
+                }
             }
         }
         return result;
